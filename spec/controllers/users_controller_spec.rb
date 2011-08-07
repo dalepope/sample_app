@@ -96,6 +96,14 @@ describe "POST 'create'" do
         post :create, :user => @attr
         response.should render_template('new')
       end
+      
+      it "should clear the password fields" do
+        populated_password = @attr.merge(:password => "shouldclear", :password_confirmation => "shouldclear")
+        post :create, :user => populated_password
+        response.should have_selector("input[name='user[password]'][type='password'][value='']")
+        response.should have_selector("input[name='user[password_confirmation]'][type='password'][value='']")
+      end
+      
     end
     
     describe "success" do
