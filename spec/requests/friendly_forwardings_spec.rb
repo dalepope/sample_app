@@ -11,4 +11,14 @@ describe "FriendlyForwardings" do
     # The test follows the redirect again, this time to users/edit.
     response.should render_template('users/edit')
   end
+  
+  it "should not forward to the requested page on signin failure" do
+    user = Factory(:user)
+    visit edit_user_path(user)
+    # The test automatically follows the redirect to the signin page.
+    fill_in :email,    :with => ""
+    fill_in :password, :with => ""
+    click_button
+    response.should have_selector("title", :content => "Sign in")
+  end
 end
