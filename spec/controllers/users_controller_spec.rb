@@ -129,6 +129,14 @@ describe UsersController do
       response.should have_selector("input[name='user[password_confirmation]'][type='password']")
     end
     
+    describe "for signed-in users" do
+      it "should deny access" do
+        @user = test_sign_in(Factory(:user))
+        get :new
+        response.should redirect_to(root_path)
+      end
+    end
+    
   end
 
   describe "POST 'create'" do
@@ -193,6 +201,17 @@ describe UsersController do
         controller.should be_signed_in
       end
     end
+    
+    describe "for signed-in users" do
+      it "should deny access" do
+        @attr = { :name => "New User", :email => "user@example.com",
+                  :password => "foobar", :password_confirmation => "foobar" }
+        @user = test_sign_in(Factory(:user))
+        post :create, @attr
+        response.should redirect_to(root_path)
+      end
+    end
+
   end
 
   describe "GET 'edit'" do
@@ -309,7 +328,7 @@ describe UsersController do
     end
   end
 
-describe "DELETE 'destroy'" do
+  describe "DELETE 'destroy'" do
 
     before(:each) do
       @user = Factory(:user)
