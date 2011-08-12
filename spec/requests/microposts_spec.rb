@@ -35,6 +35,18 @@ describe "Microposts" do
           response.should have_selector("span.content", :content => content)
         end.should change(Micropost, :count).by(1)
       end
+      
+      it "should increment miropost count" do
+        content = "Lorem ipsum dolor sit amet"
+        visit root_path
+        fill_in :micropost_content, :with => content
+        click_button
+        response.should have_selector("span.microposts", :content => "1 micropost")
+
+        fill_in :micropost_content, :with => content
+        click_button
+        response.should have_selector("span.microposts", :content => "2 microposts")
+      end
     end
   end
 end
